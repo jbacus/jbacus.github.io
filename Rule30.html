@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule 30 Cellular Automaton</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="automatonCanvas"></canvas>
+    <script>
+const canvas = document.getElementById("automatonCanvas");
+const ctx = canvas.getContext("2d");
+
+const cellSize = 4;
+const rule30 = [0, 1, 1, 1, 1, 0, 0, 0];
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const cols = Math.floor(canvas.width / cellSize);
+const rows = Math.floor(canvas.height / cellSize);
+
+let grid = Array.from({ length: rows }, () => Array(cols).fill(0));
+
+grid[0][Math.floor(cols / 2)] = 1;
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      if (grid[y][x] === 1) {
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+      }
+    }
+  }
+}
+
+function update() {
+  for (let y = 0; y < rows - 1; y++) {
+    for (let x = 0; x < cols; x++) {
+      const left = grid[y][(x - 1 + cols) % cols];
+      const center = grid[y][x];
+      const right = grid[y][(x + 1) % cols];
+
+      const neighborhood = 4 * left + 2 * center + right;
+      grid[y + 1][x] = rule30[7 - neighborhood];
+    }
+  }
+}
+
+function loop() {
+  draw();
+  update();
+  requestAnimationFrame(loop);
+}
+
+loop();
+    </script>
+</body>
+</html>
