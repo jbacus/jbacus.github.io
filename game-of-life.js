@@ -45,6 +45,23 @@ function draw() {
     }
 }
 
+function addGliderGunAt(row, col) {
+    const gliderGunOffsets = [
+        [0, 1], [0, 2], [1, 0], [1, 1], [0, 11], [1, 11], [2, 11], [-1, 12], [-2, 13], [-2, 14], [3, 12], [4, 13], [4, 14], [1, 15], [-1, 16], [0, 17], [1, 17], [2, 17], [1, 18], [3, 16], [-2, 21], [-1, 21], [0, 21], [-2, 22], [-1, 22], [0, 22], [-3, 23], [1, 23], [-4, 25], [-3, 25], [1, 25], [2, 25], [-2, 35], [-1, 35], [-2, 36], [-1, 36],
+    ];
+
+    for (const [dr, dc] of gliderGunOffsets) {
+        const newRow = row + dr;
+        const newCol = col + dc;
+
+        if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+            const index = newRow * cols + newCol;
+            grid[index] = true;
+        }
+    }
+}
+
+
 function step() {
     const newGrid = createEmptyGrid();
 
@@ -99,11 +116,11 @@ canvas.addEventListener('click', (event) => {
 
     const row = Math.floor(y / cellSize);
     const col = Math.floor(x / cellSize);
-    const index = row * cols + col;
 
-    grid[index] = !grid[index];
+    addGliderGunAt(row, col);
     draw();
 });
+
 
 document.getElementById('start').addEventListener('click', () => {
     isRunning = true;
@@ -122,6 +139,16 @@ document.getElementById('randomize').addEventListener('click', () => {
     grid = createRandomGrid();
     draw();
 });
+
+function clearGrid() {
+    return createEmptyGrid();
+}
+
+document.getElementById('clear').addEventListener('click', () => {
+    grid = clearGrid();
+    draw();
+});
+
 
 draw();
 gameLoop();
