@@ -65,9 +65,6 @@ function gameLoop() {
     setTimeout(gameLoop, 100);
 }
 
-draw();
-gameLoop();
-
 canvas.addEventListener('click', (event) => {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -79,3 +76,7 @@ canvas.addEventListener('click', (event) => {
     grid[row][col] = !grid[row][col];
     draw();
 });
+
+// Initiate game loop
+draw();
+setTimeout(gameLoop, 100);
