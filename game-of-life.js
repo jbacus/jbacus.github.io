@@ -8,11 +8,35 @@ const cols = Math.floor(canvas.width / cellSize);
 canvas.width = cols * cellSize;
 canvas.height = rows * cellSize;
 
-let grid = createEmptyGrid();
+let grid = createGliderGun();
 
 function createEmptyGrid() {
     return new Array(rows).fill(null)
         .map(() => new Array(cols).fill(false));
+}
+
+function createGliderGun() {
+    const gliderGunPattern = [
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ];
+
+    const emptyGrid = createEmptyGrid();
+    const offsetX = 1;
+    const offsetY = 1;
+
+    for (let row = 0; row < gliderGunPattern.length; row++) {
+        for (let col = 0; col < gliderGunPattern[row].length; col++) {
+            emptyGrid[row + offsetY][col + offsetX] = Boolean(gliderGunPattern[row][col]);
+        }
+    }
+
+    return emptyGrid;
 }
 
 function draw() {
