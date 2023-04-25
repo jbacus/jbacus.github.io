@@ -1,39 +1,31 @@
 const canvas = document.getElementById('game-of-life');
 const ctx = canvas.getContext('2d');
 
-const cellSize = 10;
+const cellSize = 2;
 const rows = Math.floor(canvas.height / cellSize);
 const cols = Math.floor(canvas.width / cellSize);
 
 canvas.width = cols * cellSize;
 canvas.height = rows * cellSize;
 
-let grid = createGliderGun();
+let grid = createEmptyGrid();
+let isRunning = false;
 
 function createEmptyGrid() {
-    return new Array(rows).fill(null)
-        .map(() => new Array(cols).fill(false));
+    return new Array(rows * cols).fill(false);
 }
 
+
 function createGliderGun() {
-    const gliderGunPattern = [
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    const emptyGrid = createEmptyGrid();
+
+    const gliderGunCoords = [
+        [5, 1], [5, 2], [6, 1], [6, 2], [5, 11], [6, 11], [7, 11], [4, 12], [3, 13], [3, 14], [8, 12], [9, 13], [9, 14], [6, 15], [4, 16], [5, 17], [6, 17], [7, 17], [6, 18], [8, 16], [3, 21], [4, 21], [5, 21], [3, 22], [4, 22], [5, 22], [2, 23], [6, 23], [1, 25], [2, 25], [6, 25], [7, 25], [3, 35], [4, 35], [3, 36], [4, 36],
     ];
 
-    const emptyGrid = createEmptyGrid();
-    const offsetX = 1;
-    const offsetY = 1;
-
-    for (let row = 0; row < gliderGunPattern.length; row++) {
-        for (let col = 0; col < gliderGunPattern[row].length; col++) {
-            emptyGrid[row + offsetY][col + offsetX] = Boolean(gliderGunPattern[row][col]);
-        }
+    for (const [row, col] of gliderGunCoords) {
+        const index = row * cols + col;
+        emptyGrid[index] = true;
     }
 
     return emptyGrid;
@@ -41,52 +33,63 @@ function createGliderGun() {
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            if (grid[row][col]) {
-                ctx.fillStyle = 'black';
-                ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
-            }
+    
+    for (let i = 0; i < grid.length; i++) {
+        if (grid[i]) {
+            const row = Math.floor(i / cols);
+            const col = i % cols;
+
+            ctx.fillStyle = 'black';
+            ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
         }
     }
 }
 
 function step() {
     const newGrid = createEmptyGrid();
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            const neighbors = countNeighbors(row, col);
-            const isAlive = grid[row][col];
 
-            if (isAlive) {
-                newGrid[row][col] = neighbors === 2 || neighbors === 3;
-            } else {
-                newGrid[row][col] = neighbors === 3;
-            }
+    for (let i = 0; i < grid.length; i++) {
+        const row = Math.floor(i / cols);
+        const col = i % cols;
+        const neighbors = countNeighbors(row, col);
+
+        if (grid[i]) {
+            newGrid[i] = neighbors === 2 || neighbors === 3;
+        } else {
+            newGrid[i] = neighbors === 3;
         }
     }
+
     grid = newGrid;
 }
 
 function countNeighbors(row, col) {
     let count = 0;
-    for (let r = -1; r <= 1; r++) {
-        for (let c = -1; c <= 1; c++) {
-            if (r === 0 && c === 0) continue;
-            const newRow = row + r;
-            const newCol = col + c;
+
+    for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+
+            const newRow = row + dr;
+            const newCol = col + dc;
+
             if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
-                count += grid[newRow][newCol] ? 1 : 0;
+                const index = newRow * cols + newCol;
+                count += grid[index] ? 1 : 0;
             }
         }
     }
+
     return count;
 }
 
 function gameLoop() {
-    step();
-    draw();
-    setTimeout(gameLoop, 100);
+    if (isRunning) {
+        step();
+        draw();
+    }
+
+    requestAnimationFrame(gameLoop);
 }
 
 canvas.addEventListener('click', (event) => {
@@ -96,11 +99,29 @@ canvas.addEventListener('click', (event) => {
 
     const row = Math.floor(y / cellSize);
     const col = Math.floor(x / cellSize);
+    const index = row * cols + col;
 
-    grid[row][col] = !grid[row][col];
+    grid[index] = !grid[index];
     draw();
 });
 
-// Initiate game loop
+document.getElementById('start').addEventListener('click', () => {
+    isRunning = true;
+});
+
+document.getElementById('stop').addEventListener('click', () => {
+    isRunning = false;
+});
+
+function createRandomGrid() {
+    return new Array(rows * cols).fill(null)
+        .map(() => Math.random() < 0.5);
+}
+
+document.getElementById('randomize').addEventListener('click', () => {
+    grid = createRandomGrid();
+    draw();
+});
+
 draw();
-setTimeout(gameLoop, 50);
+gameLoop();
