@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html>
+<head>
+<style>
+  .wall { stroke: black; stroke-width: 5; fill: none; }
+  .window { stroke: blue; stroke-width: 2; fill: lightblue; }
+  .door { stroke: brown; stroke-width: 3; fill: burlywood; }
+</style>
+</head>
 <body>
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer walls -->
+  <rect x="10" y="10" width="280" height="180" class="wall" />
 
-<h1>house</h1>
+  <!-- Inner walls -->
+  <line x1="10" y1="60" x2="200" y2="60" class="wall" />
+  <line x1="200" y1="10" x2="200" y2="190" class="wall" />
+  <line x1="200" y1="130" x2="290" y2="130" class="wall" />
 
-<h2>house sheep</h2>
+  <!-- Windows -->
+  <rect x="30" y="20" width="40" height="20" class="window" />
+  <rect x="230" y="20" width="40" height="20" class="window" />
+  <rect x="230" y="140" width="40" height="20" class="window" />
 
-<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500">
-    <!-- Exterior walls -->
-    <rect x="50" y="50" width="200" height="200" fill="white" stroke="black" stroke-width="10"/>
-    <rect x="250" y="50" width="200" height="200" fill="white" stroke="black" stroke-width="10"/>
-    <rect x="50" y="250" width="200" height="200" fill="white" stroke="black" stroke-width="10"/>
-    <rect x="250" y="250" width="200" height="200" fill="white" stroke="black" stroke-width="10"/>
-    
-    <!-- Interior walls -->
-    <rect x="150" y="50" width="100" height="200" fill="white" stroke="black" stroke-width="10"/>
-    <rect x="250" y="150" width="100" height="200" fill="white" stroke="black" stroke-width="10"/>
-    
-    <!-- Door -->
-    <rect x="170" y="150" width="60" height="100" fill="brown" stroke="black" stroke-width="5"/>
-    
-    <!-- Windows -->
-    <rect x="70" y="70" width="60" height="60" fill="lightblue" stroke="black" stroke-width="5"/>
-    <rect x="70" y="270" width="60" height="60" fill="lightblue" stroke="black" stroke-width="5"/>
-    <rect x="270" y="70" width="60" height="60" fill="lightblue" stroke="black" stroke-width="5"/>
-    <rect x="270" y="270" width="60" height="60" fill="lightblue" stroke="black" stroke-width="5"/>
-  </svg>
-  
+  <!-- Doors -->
+  <rect x="120" y="10" width="20" height="50" class="door" />
+  <rect x="200" y="80" width="20" height="50" class="door" />
+</svg>
+
 </body>
 </html>
