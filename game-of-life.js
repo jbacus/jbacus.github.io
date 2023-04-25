@@ -103,4 +103,4 @@ canvas.addEventListener('click', (event) => {
 
 // Initiate game loop
 draw();
-setTimeout(gameLoop, 100);
+setTimeout(gameLoop, 50);
