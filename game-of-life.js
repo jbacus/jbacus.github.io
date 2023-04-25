@@ -5,6 +5,9 @@ const cellSize = 10;
 const rows = Math.floor(canvas.height / cellSize);
 const cols = Math.floor(canvas.width / cellSize);
 
+canvas.width = cols * cellSize;
+canvas.height = rows * cellSize;
+
 let grid = createEmptyGrid();
 
 function createEmptyGrid() {
@@ -59,7 +62,7 @@ function countNeighbors(row, col) {
 function gameLoop() {
     step();
     draw();
-    requestAnimationFrame(gameLoop);
+    setTimeout(gameLoop, 100);
 }
 
 draw();
